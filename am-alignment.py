@@ -1,7 +1,7 @@
 #!./python/bin/python
 """
-using the owon dge2070/dge2035 arbitrary waveform
-generators to do am radio alignments.
+use the owon dge2070/dge2035 arbitrary waveform
+generator to do am radio alignment.
 
 set up a virtual python environment:
 $ python -m venv ./python
