@@ -12,14 +12,19 @@ $ ./python/bin/pip install pyvisa-py
 $ ./python/bin/pip install pyusb
 $ ./python/bin/pip install python-usbtmc
 """
+from connections import AWG
 import pyvisa
 import tty
 import sys
 
-def enable_am(awg):
+def open(awg):
     awg.write('source1:am:state on')
     awg.write('source1:am:internal:frequency 1000')
     awg.write('output1:state on')
+
+def close(awg):
+    awg.write('output1:state off')
+    sys.exit()
 
 # in milivolts
 def set_amplitude(awg, amplitude):
@@ -29,12 +34,18 @@ def set_amplitude(awg, amplitude):
 def set_frequency(awg, frequency):
     awg.write('source1:frequency {}'.format(frequency * 1000))
 
+def toggle_output(awg):
+    if awg.query('output1:state?').strip() == '1':
+        awg.write('output1:state off')
+    else:
+        awg.write('output1:state on')
+
 def main():
     tty.setcbreak(sys.stdin.fileno())
     rm = pyvisa.ResourceManager('@py')
-    awg = rm.open_resource('USB0::21317::4661::23300585::0::INSTR')
+    awg = rm.open_resource(AWG)
 
-    enable_am(awg)
+    open(awg)
     set_amplitude(awg, 500)
     set_frequency(awg, 455)
 
@@ -57,8 +68,10 @@ def main():
             lambda: set_amplitude(awg, 1000)),
         ('9', 'to set the output amplitude to 2000mv',
             lambda: set_amplitude(awg, 2000)),
+        [' ', 'to toggle the output on and off',
+            lambda: toggle_output(awg)],
         ('q', 'to exit',
-            lambda: sys.exit()),
+            lambda: close(awg)),
     ]
 
     for index, command in enumerate(commands):
