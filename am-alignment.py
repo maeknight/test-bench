@@ -2,15 +2,6 @@
 """
 use the owon dge2070/dge2035 arbitrary waveform
 generator to do am radio alignment.
-
-set up a virtual python environment:
-$ python -m venv ./python
-
-and install the following:
-$ ./python/bin/pip install pyvisa
-$ ./python/bin/pip install pyvisa-py
-$ ./python/bin/pip install pyusb
-$ ./python/bin/pip install python-usbtmc
 """
 import connections
 import pyvisa
