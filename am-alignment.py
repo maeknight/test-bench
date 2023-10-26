@@ -12,7 +12,7 @@ $ ./python/bin/pip install pyvisa-py
 $ ./python/bin/pip install pyusb
 $ ./python/bin/pip install python-usbtmc
 """
-from connections import AWG
+import connections
 import pyvisa
 import tty
 import sys
@@ -43,7 +43,7 @@ def toggle_output(awg):
 def main():
     tty.setcbreak(sys.stdin.fileno())
     rm = pyvisa.ResourceManager('@py')
-    awg = rm.open_resource(AWG)
+    awg = connections.open_awg(rm)
 
     open(awg)
     set_amplitude(awg, 500)
